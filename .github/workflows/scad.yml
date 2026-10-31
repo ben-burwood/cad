@@ -1,0 +1,36 @@
+name: Build STL with OpenSCAD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install OpenSCAD
+        run: sudo snap install openscad-nightly
+
+      - name: Render all .scad files to STL
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          find . -name '*.scad' -not -path './.git/*' -print0 |
+            while IFS= read -r -d '' f; do
+              rel="${f#./}"
+              dest="out/${rel%.scad}.stl"
+              mkdir -p "$(dirname "$dest")"
+              echo "Rendering $rel -> $dest"
+              openscad-nightly -D extrude=true -o "$dest" "$f"
+            done
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: stl
+          path: out/
