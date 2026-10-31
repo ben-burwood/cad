@@ -12,6 +12,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - name: Install OpenSCAD
         run: sudo snap install openscad-nightly
@@ -21,7 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p out
-          find . -name '*.scad' -not -path './.git/*' -print0 |
+          find . -name '*.scad' -not -path './.git/*' -not -path './BOSL2/*' -print0 |
             while IFS= read -r -d '' f; do
               rel="${f#./}"
               dest="out/${rel%.scad}.stl"
