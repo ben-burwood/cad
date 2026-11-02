@@ -6,8 +6,8 @@ $fn = $preview ? 18 : 180;
 fuzz = 0.01;
 
 // configurable parameters
-hook_count = 10;
-length = 150;
+hook_count = 8;
+length = 140;
 screw_head_d = 6.2;
 screw_d = 3.3;
 screws_every_n_hooks = 8;
